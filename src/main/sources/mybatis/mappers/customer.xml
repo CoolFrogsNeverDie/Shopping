@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="customer">
+		
+	
+	<!-- Customer List -->
+	<select id = "allList" resultType = "com.javaex.vo.CustomerVO">
+	<![CDATA[
+		select 
+			customer_id as customerId
+			,customer_password as password
+			,customer_name as name
+			,customer_numbers as customerNumbers
+			,code_type as codeType
+		from (select 
+				customer_id 
+				,customer_password
+				,customer_name
+				,customer_numbers
+				,code_type 
+			from customer
+        	order by customer_name)
+        order by code_type
+	]]>
+	</select>
+
+	<!-- Search Customer Name -->
+	<select id = "SearchName" parameterType = "String" resultType = "com.javaex.vo.CustomerVO">
+	<![CDATA[
+        select 
+			customer_id as customerId
+			,customer_password as password
+			,customer_name as name
+			,customer_numbers as customerNumbers
+			,code_type as codeType
+		from customer
+        where customer_name like '%${value}%'
+        order by customer_name
+	]]>
+	</select>
+
+	<!-- Search Customer ID -->
+	<select id = "SearchId" parameterType = "String" resultType = "com.javaex.vo.CustomerVO">
+	<![CDATA[
+        select 
+			customer_id as customerId
+			,customer_password as password
+			,customer_name as name
+			,customer_numbers as customerNumbers
+			,code_type as codeType
+		from customer
+        where customer_id like '%${value}%'
+        order by customer_id
+	]]>
+	</select>
+	
+	<!-- Search Customer ID -->
+	<select id = "getCustomer" parameterType = "String" resultType = "com.javaex.vo.CustomerVO">
+	<![CDATA[
+        select 
+			customer_id as customerId
+			,customer_password as password
+			,customer_name as name
+			,customer_numbers as customerNumbers
+			,code_type as codeType
+		from customer
+        where customer_id  like '%' || #{value} || '%'
+	]]>
+	</select>
+
+	<!-- Update Customer-->
+	
+	<update id ="updateCustomer" parameterType = "com.javaex.vo.CustomerVO">
+		update customer set
+    		customer_name = #{name}
+    		,code_type = #{codeType}
+    		,customer_numbers = #{customerNumbers}
+		where customer_id = #{customerId}
+	</update>
+	
+	<!-- Delete Customer-->
+
+	<delete id ="deleteCustomer" parameterType ="String">
+		delete customer
+		where customer_id like '%' || #{value} || '%'
+	</delete>
+	
+</mapper>

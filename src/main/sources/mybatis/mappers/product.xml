@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="product">
+
+	<!-- 전체 제품 리스트 -->
+	<select  id="allList" resultType ="com.javaex.vo.ProductVO">
+	<![CDATA[
+		select product_id as productId
+			,product_name as productName
+			,product_ea as productEA
+			,price
+		from product
+		order by product_id
+	]]>	
+	</select>
+
+	
+	<!-- 제품 이름으로 검색 -->
+
+	<select id = "researchName" parameterType = "String" resultType = "com.javaex.vo.ProductVO">
+		select product_id as productId
+			,product_name as productName
+			,product_ea as productEA
+			,price
+		from product
+		where product_name like '%${value}%'
+		order by product_name desc
+	
+	</select>
+	
+	
+	<!-- 제품 ID로 검색 -->
+
+	<select id = "researchId" parameterType = "String" resultType = "com.javaex.vo.ProductVO">
+		select product_id as productId
+			,product_name as productName
+			,product_ea as productEA
+			,price
+		from product
+		where 	product_id like '%${value}%'
+		order by product_id
+	
+	</select>
+
+	<!-- research Product  All -->
+	
+	
+	<select id = "researchProduct" parameterType = "Map" resultType = "com.javaex.vo.ProductVO">
+	
+		select product_id as productId
+			,product_name as productName
+			,product_ea as productEA
+			,price
+		from product
+	 <if test="searchOption=='productId'">
+   	 	where product_id like  '%' || #{keyword} || '%'
+   	 </if>
+     <if test="searchOption=='productName'">
+   	 	where product_name like  '%' || #{keyword} || '%'
+   	 </if>
+
+	
+	</select>
+
+	<!-- 제품 가격으로 검색 -->
+
+	<select id = "researchPrice" parameterType = "Map" resultType = "com.javaex.vo.ProductVO">
+        
+        select product_id as productId
+			,product_name as productName
+			,product_ea as productEA
+			,price
+		from product
+		where 	price  between #{minPrice} and #{maxPrice}
+		order by price
+	
+	</select>
+	
+	<!-- 특정 제품 ID로 객체 받아오는 거-->
+
+		<select id = "getProduct" parameterType = "String" resultType = "com.javaex.vo.ProductVO">
+		select product_id as productId
+			,product_name as productName
+			,product_ea as productEA
+			,price
+		from product
+		where 	product_id = '${value}'
+	</select>
+	
+		<!-- 제품 update-->
+	
+		<update id = "updateProduct" parameterType = "com.javaex.vo.ProductVO">
+		
+			update product
+				set product_name = #{productName} 
+				,product_ea = #{productEA}
+				,price = #{price}
+			where product_id = #{productId}
+		
+		</update>
+	
+		<!-- 제품 insert -->
+		
+		<insert id = "insertProduct" parameterType = "com.javaex.vo.ProductVO">
+			insert into product values
+			(#{productId}
+			,#{productName}
+			,#{productEA}
+			,#{price}
+			)
+		</insert>
+	
+		<!-- 제품 delete -->
+		<delete id="deleteProduct" parameterType = "String">
+			delete product 
+			where product_id = '${value}'
+		</delete>
+</mapper>
